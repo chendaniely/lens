@@ -1,0 +1,58 @@
+FROM alpine:latest
+
+
+MAINTAINER Daniel Chen <chend@vt.edu>
+
+RUN apk update && \
+    apk add ca-certificates emacs nano bash wget \
+            alpine-sdk
+
+RUN apk add  libx11-dev tcl-dev tk-dev clang libc-dev musl-dev
+
+RUN apk --no-cache add ca-certificates && \
+wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://raw.githubusercontent.com/sgerrand/alpine-pkg-glibc/master/sgerrand.rsa.pub && \
+wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.23-r3/glibc-2.23-r3.apk && \
+apk add glibc-2.23-r3.apk
+
+
+COPY test.cpp /test.cpp
+RUN g++ test.cpp -lX11
+
+# COPY nan.h /usr/include/bits/nan.h
+
+COPY install_lens.sh /code/install_lens.sh
+RUN cd /code && bash install_lens.sh
+
+# RUN mkdir /code && cd code && \
+#     wget https://github.com/chendaniely/multi-agent-neural-network/raw/master/Lens.tgz && \
+#     tar xvzf Lens.tgz && \
+#     cd Lens
+
+# ENV LENSDIR=/code/Lens
+# ENV HOSTTYPE=x86_64-linux
+
+# RUN pwd && ls -alh && cd /code/Lens/TclTk && ls -alh && cd tcl8.3.4 && ls -alh && cd unix && ls -alh && \
+#     rm config.cache && \
+#     ./configure --enable-shared --enable-64bit && \
+#     make && \
+#     rm -f *.o
+
+# RUN pwd && ls -alh && cd /code && ls -alh && cd Lens && ls -alh && cd TclTk && ls -alh && cd tk8.3.4/unix && \
+#     rm config.cache && \
+#     ./configure --enable-shared --enable-64bit --with-tcl=../../tcl8.3.4/unix && \
+#     make && \
+#     rm -f *.o
+
+# RUN cd /code/Lens && \
+#     mkdir -p /code/Lens/Bin/x86_64-linux && \
+#     mv /code/Lens/TclTk/tcl8.3.4/unix/libtcl8.3.* /code/Lens/Bin/x86_64-linux && \
+#     mv /code/Lens/TclTk/tk8.3.4/unix/libtk8.3.* /code/Lens/Bin/x86_64-linux && \
+#     cd /code/Lens
+
+# RUN cd /code/Lens && make all
+
+# ENTRYPOINT ["lens"]
+
+# RUN apk del alpine-sdk
+
+CMD ["/bin/bash"]

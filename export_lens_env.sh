@@ -1,0 +1,4 @@
+export LENSDIR=/code/Lens
+export HOSTTYPE=x86_64-linux
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${LENSDIR}/Bin/${HOSTTYPE}
+export PATH=${PATH}:${LENSDIR}/Bin/${HOSTTYPE}
